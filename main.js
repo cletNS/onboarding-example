@@ -11,7 +11,7 @@ const selectYear = document.getElementById("selectYear");
 btnBuyName.onclick = buyName;
 btnConnect.onclick = connect;
 
-let contract, address, provider, selectedYear, selectedIndex;
+let contract, address, provider, years, selectedIndex;
 
 function listenForTransactionMine(transactionResponse, provider) {
   console.log(`Mining ${transactionResponse.hash}`);
@@ -53,11 +53,12 @@ async function connect() {
 ///// NAME BUYING FUNCTION///////
 async function buyName() {
   const name = inputName.value;
-  const years = selectYear.options[selectYear.selectedIndex].text;
+  years = selectYear.options[selectYear.selectedIndex].text;
   const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
     console.log(`${name} not available`);
+
     if ((await listedName(name)) == true) {
       alert(`The name "${name}" has been listed for sale.`);
       console.log("Name is listed");

@@ -53,8 +53,8 @@ body {
   touch-action: manipulation;
 }
 
-.button-33:hover,
-button-33:focus {
+.button:hover,
+button:focus {
   outline: none;
   box-shadow: rgba(44, 187, 99, 0.35) 0 -25px 18px -14px inset,
     rgba(44, 187, 99, 0.25) 0 1px 2px, rgba(44, 187, 99, 0.25) 0 2px 4px,
