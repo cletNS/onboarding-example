@@ -6,11 +6,12 @@ import { abi, CONTRACT_ADDRESS } from "./constants.js";
 const btnBuyName = document.getElementById("btnBuyName");
 const btnConnect = document.getElementById("btnConnect");
 const inputName = document.getElementById("inputText");
+const selectYear = document.getElementById("selectYear");
 
 btnBuyName.onclick = buyName;
 btnConnect.onclick = connect;
 
-let contract, address, provider;
+let contract, address, provider, selectedYear, selectedIndex;
 
 function listenForTransactionMine(transactionResponse, provider) {
   console.log(`Mining ${transactionResponse.hash}`);
@@ -27,6 +28,7 @@ function listenForTransactionMine(transactionResponse, provider) {
   });
 }
 
+///// METMASK CONNECTION///////
 async function connect() {
   if (typeof window.ethereum != "undefined") {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -48,15 +50,14 @@ async function connect() {
   }
 }
 
+///// NAME BUYING FUNCTION///////
 async function buyName() {
   const name = inputName.value;
-  const years = 1;
-  const address = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
+  const years = selectYear.options[selectYear.selectedIndex].text;
+  const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
-    // console.log();
     console.log(`${name} not available`);
-    // return;
     if ((await listedName(name)) == true) {
       alert(`The name "${name}" has been listed for sale.`);
       console.log("Name is listed");
@@ -66,19 +67,17 @@ async function buyName() {
       return;
     }
   } else {
+    // GETS CURRENT ETH PRICE
     const ethPrice = await contract.getEthPrice();
 
     let amtToPay = await contract.getAmountToPay(name, years);
-    console.log(amtToPay);
-    // let amt = amtToPay.totalPrice;
-    // console.log(amt);
     const PRICE_USD = amtToPay / 10 ** 18;
 
     amtToPay =
       ethers.utils.formatEther(amtToPay.toString()) /
       ethers.utils.formatEther(ethPrice.toString());
 
-    amtToPay += 0.001;
+    // amtToPay += 0.001;
 
     console.log(`Name: ${name}`);
     console.log(`No. Of Years: ${years}`);
@@ -90,7 +89,7 @@ async function buyName() {
       )}`
     );
 
-    const res = await contract.pay(name, years, address, {
+    const res = await contract.pay(name, years, partnerAddress, {
       value: BigNumber.from(
         ethers.utils.parseEther(amtToPay.toFixed(18).toString())
       ),
@@ -99,27 +98,21 @@ async function buyName() {
     await listenForTransactionMine(res, provider);
   }
 }
+
+///// CHECKS IF NAME HAS BEEN BOUGHT///////
 async function nameExists(name) {
   const res = await contract.nameExists(name);
   return res;
 }
 
+///// CHECKS IF NAME HAS BEEN PUT UP FOR SALE///////
 async function listedName(name) {
   const res = await contract.nameForSale(name);
-  console.log(res);
   return res;
 }
-// async function delistName() {
-//   selectedDelistNames =
-//     selectDelistNames.options[selectDelistNames.selectedIndex].text;
-//   const res = await contract.delistName(selectedDelistNames);
-//   console.log(`unlisted Name${selectedDelistNames}`);
-// }
 
-//BUY LISTED NAME
+///// FUNCTION FOR BUYING A LISTED NAME///////
 async function acquireListedName() {
-  // const res = await contract.acquireListed(name);
-
   const name = inputName.value;
 
   const ethPrice = await contract.getEthPrice();
@@ -133,13 +126,11 @@ async function acquireListedName() {
   amt += 0.001;
 
   console.log(`Name: ${name}`);
-  //   console.log(`No. Of Years: ${years}`);
   console.log(`Price: ${PRICE_USD} USD`);
   console.log(`Amount to pay in ETH: ${amt}`);
   console.log(
     `Wei Conversion: ${ethers.utils.parseEther(amt.toFixed(18).toString())}`
   );
-  // return res;
 
   const res = await contract.buyListedName(name, {
     value: BigNumber.from(ethers.utils.parseEther(amt.toFixed(18).toString())),
