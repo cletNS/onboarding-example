@@ -60,7 +60,40 @@ async function buyName() {
     console.log(`${name} not available`);
 
     if ((await nameExpiryCheck(name)) == true) {
-      return;
+      const ethPrice = await contract.getEthPrice();
+
+      // GETS AMOUNT TO PAY IN USD
+      let amtToPayIn_USD = await contract.getAmountToPay(name, years);
+
+      // GETS AMOUNT TO PAY IN ETH
+      let amtToPayIn_ETH =
+        ethers.utils.formatEther(amtToPayIn_USD.toString()) /
+        ethers.utils.formatEther(ethPrice.toString());
+
+      // Slippage Tolerance
+      const slippage =
+        ethers.utils.formatEther((0.001 * 10 ** 18).toString()) /
+        ethers.utils.formatEther(ethPrice.toString());
+
+      amtToPayIn_ETH += slippage;
+
+      console.log(`Name: ${name}`);
+      console.log(`No. Of Years: ${years}`);
+      console.log(`Price: ${amtToPayIn_USD / 10 ** 18} USD`);
+      console.log(`Amount to pay in ETH: ${amtToPayIn_ETH}`);
+      console.log(
+        `Wei Conversion: ${ethers.utils.parseEther(
+          amtToPayIn_ETH.toFixed(18).toString()
+        )}`
+      );
+
+      const res = await contract.pay(name, years, partnerAddress, {
+        value: BigNumber.from(
+          ethers.utils.parseEther(amtToPayIn_ETH.toFixed(18).toString())
+        ),
+        gasLimit: 3000000,
+      });
+      await listenForTransactionMine(res, provider);
     }
   } else {
     // GETS CURRENT ETH PRICE
