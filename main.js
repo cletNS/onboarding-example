@@ -59,40 +59,41 @@ async function buyName() {
   if ((await nameExists(name)) == true) {
     console.log(`${name} not available`);
 
-    if ((await listedName(name)) == true) {
-      alert(`The name "${name}" has been listed for sale.`);
-      console.log("Name is listed");
-
-      await acquireListedName(name);
-
+    if ((await nameExpiryCheck(name)) == true) {
       return;
     }
   } else {
     // GETS CURRENT ETH PRICE
     const ethPrice = await contract.getEthPrice();
 
-    let amtToPay = await contract.getAmountToPay(name, years);
-    const PRICE_USD = amtToPay / 10 ** 18;
+    // GETS AMOUNT TO PAY IN USD
+    let amtToPayIn_USD = await contract.getAmountToPay(name, years);
 
-    amtToPay =
-      ethers.utils.formatEther(amtToPay.toString()) /
+    // GETS AMOUNT TO PAY IN ETH
+    let amtToPayIn_ETH =
+      ethers.utils.formatEther(amtToPayIn_USD.toString()) /
       ethers.utils.formatEther(ethPrice.toString());
 
-    // amtToPay += 0.001;
+    // Slippage Adjustment
+    const slippage =
+      ethers.utils.formatEther((0.1 * 10 ** 18).toString()) /
+      ethers.utils.formatEther(ethPrice.toString());
+
+    amtToPayIn_ETH += slippage;
 
     console.log(`Name: ${name}`);
     console.log(`No. Of Years: ${years}`);
-    console.log(`Price: ${PRICE_USD} USD`);
-    console.log(`Amount to pay in ETH: ${amtToPay}`);
+    console.log(`Price: ${amtToPayIn_USD / 10 ** 18} USD`);
+    console.log(`Amount to pay in ETH: ${amtToPayIn_ETH}`);
     console.log(
       `Wei Conversion: ${ethers.utils.parseEther(
-        amtToPay.toFixed(18).toString()
+        amtToPayIn_ETH.toFixed(18).toString()
       )}`
     );
 
     const res = await contract.pay(name, years, partnerAddress, {
       value: BigNumber.from(
-        ethers.utils.parseEther(amtToPay.toFixed(18).toString())
+        ethers.utils.parseEther(amtToPayIn_ETH.toFixed(18).toString())
       ),
       gasLimit: 3000000,
     });
@@ -106,37 +107,7 @@ async function nameExists(name) {
   return res;
 }
 
-///// CHECKS IF NAME HAS BEEN PUT UP FOR SALE///////
-async function listedName(name) {
-  const res = await contract.nameForSale(name);
+async function nameExpiryCheck(name) {
+  const res = await contract.isExpired(name);
   return res;
-}
-
-///// FUNCTION FOR BUYING A LISTED NAME///////
-async function acquireListedName() {
-  const name = inputName.value;
-
-  const ethPrice = await contract.getEthPrice();
-
-  let amt = await contract.name_ToPrice(name);
-  const PRICE_USD = amt / 10 ** 18;
-  amt =
-    ethers.utils.formatEther(amt.toString()) /
-    ethers.utils.formatEther(ethPrice.toString());
-
-  amt += 0.001;
-
-  console.log(`Name: ${name}`);
-  console.log(`Price: ${PRICE_USD} USD`);
-  console.log(`Amount to pay in ETH: ${amt}`);
-  console.log(
-    `Wei Conversion: ${ethers.utils.parseEther(amt.toFixed(18).toString())}`
-  );
-
-  const res = await contract.buyListedName(name, {
-    value: BigNumber.from(ethers.utils.parseEther(amt.toFixed(18).toString())),
-    gasLimit: 3000000,
-  });
-
-  await listenForTransactionMine(res, provider);
 }
