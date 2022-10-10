@@ -74,9 +74,9 @@ async function buyName() {
       ethers.utils.formatEther(amtToPayIn_USD.toString()) /
       ethers.utils.formatEther(ethPrice.toString());
 
-    // Slippage Adjustment
+    // Slippage Tolerance
     const slippage =
-      ethers.utils.formatEther((0.1 * 10 ** 18).toString()) /
+      ethers.utils.formatEther((0.001 * 10 ** 18).toString()) /
       ethers.utils.formatEther(ethPrice.toString());
 
     amtToPayIn_ETH += slippage;
