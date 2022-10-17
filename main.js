@@ -56,10 +56,6 @@ async function buyName() {
 
   if ((await nameExists(name)) == true) {
     console.log(`${name} not available`);
-
-    if ((await isExpired(name)) == true) {
-      buy(name, years, partnerAddress);
-    }
   } else {
     buy(name, years, partnerAddress);
   }
@@ -67,13 +63,14 @@ async function buyName() {
 
 ///// CHECKS IF NAME HAS BEEN BOUGHT///////
 async function nameExists(name) {
-  const res = await contract.nameExists(name);
-  return res;
-}
-
-async function isExpired(name) {
-  const res = await contract.isExpired(name);
-  return res;
+  let exists = await contract.nameExists(name);
+  if (exists == true) {
+    const isExpired = await cletPayContract.isExpired(name);
+    if (isExpired == true) {
+      exists = false;
+    }
+  }
+  return exists;
 }
 
 async function buy(name, years, partnerAddress) {

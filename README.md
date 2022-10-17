@@ -1,68 +1,74 @@
-# **BUY PROCESS**
+# **OnBoarding Procedure**
 
 ## **Functions**
-___
-- [*buyName()*](#1-after-user-clicks-buy-name-it-checks-if-the-name-already-exists-if-returned-value-is-false-jump-to-step-3)
-- [*isExpiry()*](#2-it-checks-if-the-entered-name-is-expired-or-not)
-- [*nameExists()*](#3-after-the-name-has-been-checked-and-does-not-exist-it-fetches-the-current-eth-price-and-amount-to-pay)
+
+---
+
+- [_buyName()_](#1-after-user-clicks-buy-name-it-checks-if-the-name-already-exists-if-returned-value-is-false-jump-to-step-3)
+- [_isExpiry()_](#2-it-checks-if-the-entered-name-is-expired-or-not)
+- [_nameExists()_](#3-after-the-name-has-been-checked-and-does-not-exist-it-fetches-the-current-eth-price-and-amount-to-pay)
 
 ### **STEPS**
-___
 
-#### **1.** After user clicks **'buy name'** it calls on ***buyName()***. It then [checks](#name-checking) the name 
+---
+
+#### **1.** After user clicks **'buy name'** it calls on **_buyName()_**. It then [checks](#name-checking) if the name is available to be bought
+
 ```shell
 async function buyName() {
   const name = inputName.value;
   years = selectYear.options[selectYear.selectedIndex].text;
-  const partnerAddress = "0x220CBA...dAa66C";
+  const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
-
-    if ((await isExpired(name)) == true) {
-      buy(name, years, partnerAddress);
-    }
+    console.log(`${name} not available`);
   } else {
     buy(name, years, partnerAddress);
   }
 }
 ```
-- ##### **NAME CHECKING**
 
-    If the name ***exists*** it checks if ***expired or not*** <<< [**MOVE TO STEP 2**](#2-it-checks-if-the-entered-name-is-expired-or-not)
+#### **2.** It checks if the entered name is **_expired or not_**
 
-    If the name ***does not exist*** <<< [**MOVE TO STEP 3**](#3-after-the-name-has-been-checked-and-does-not-exist-it-fetches-the-current-eth-price-and-amount-to-pay)
+by calling on **\*nameExists()** and **isExpiry()\***
 
-
-#### **2.** It checks if the entered name is ***expired or not***
-by calling on ***isExpiry()***
 ```shell
-async function isExpired(name) {
-  const res = await contract.isExpired(name);
-  return res;
+async function nameExists(name) {
+  let exists = await contract.nameExists(name);
+  if (exists == true) {
+    const isExpired = await cletPayContract.isExpired(name);
+    if (isExpired == true) {
+      exists = false;
+    }
+  }
+  return exists;
 }
 ```
-#### 3. After the name has been checked and does not exist. It proceeds to call on ***buy()*** to first check the amount to pay for the name
+
+#### 3. After the name has been checked and does not exist. It proceeds to call on **_buy()_** to first check the amount to pay for the name
+
 ```shell
-async function buy(name, years, partnerAddress) 
+async function buy(name, years, partnerAddress)
 ```
-  - ##### **PRICE CHECKING**
-    It gets current **eth price**
-    ```shell
-    const ethPrice = await contract.getEthPrice();
-    ```
-    and next gets the **amount to pay in USD**
-    ```shell
-    let amtToPayIn_USD = await contract.getAmountToPay(name, years);
-    ```
-    then lastly gets the **amount to pay in eth**
-    ```shell
-    let amtToPayIn_ETH =
-    ethers.utils.formatEther(amtToPayIn_USD.toString()) /
-    ethers.utils.formatEther(ethPrice.toString());
-    ```
 
+- ##### **PRICE CHECKING**
+  It gets current **eth price**
+  ```shell
+  const ethPrice = await contract.getEthPrice();
+  ```
+  and next gets the **amount to pay in USD**
+  ```shell
+  let amtToPayIn_USD = await contract.getAmountToPay(name, years);
+  ```
+  then lastly gets the **amount to pay in eth**
+  ```shell
+  let amtToPayIn_ETH =
+  ethers.utils.formatEther(amtToPayIn_USD.toString()) /
+  ethers.utils.formatEther(ethPrice.toString());
+  ```
 
-#### 4. The ***pay()*** function is called to acquire the name.
+#### 4. The **_pay()_** function is called to acquire the name.
+
 ```shell
 const res = await contract.pay(name, years, partnerAddress, {
     value: BigNumber.from(
@@ -73,6 +79,5 @@ const res = await contract.pay(name, years, partnerAddress, {
   await listenForTransactionMine(res, provider);
 }
 ```
-___
-    
 
+---
