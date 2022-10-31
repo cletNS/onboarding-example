@@ -55,16 +55,6 @@ async function buyName() {
   const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
-    // console.log(`${name} not available`);
-    // alert("Name has already been bought");
-    // return;
-    // const waitExpired = await contract.isExpired(name);
-    // if (waitExpired == true) {
-    //   buy(name, years, partnerAddress);
-    // } else {
-    //   alert("name has been bought");
-    //   return;
-    // }
   } else {
     buy(name, years, partnerAddress);
   }
@@ -78,7 +68,7 @@ async function nameExists(name) {
     if (isExpired == true) {
       exists = false;
     } else {
-      alert("name has been bought");
+      alert("name not available");
     }
   }
   return exists;
