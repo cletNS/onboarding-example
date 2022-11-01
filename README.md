@@ -1,14 +1,9 @@
-# **OnBoarding Procedure**
+# **Functions**
 
-## **Functions**
+- [_buyName()_](#1-after-user-clicks-buy-name-it-calls-on-buyname-it-then-checks-if-the-name-is-available-to-be-bought)
+- [_nameExists()_](#3-after-the-name-has-been-checked-and-does-not-exist-it-proceeds-to-call-on-buy-to-first-check-the-amount-to-pay-for-the-name)
 
----
-
-- [_buyName()_](#1-after-user-clicks-buy-name-it-checks-if-the-name-already-exists-if-returned-value-is-false-jump-to-step-3)
-- [_isExpiry()_](#2-it-checks-if-the-entered-name-is-expired-or-not)
-- [_nameExists()_](#3-after-the-name-has-been-checked-and-does-not-exist-it-fetches-the-current-eth-price-and-amount-to-pay)
-
-### **STEPS**
+### **Procedure**
 
 ---
 
@@ -18,6 +13,8 @@
 async function buyName() {
   const name = inputName.value;
   years = selectYear.options[selectYear.selectedIndex].text;
+
+  //Replace with your valid partner address
   const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
@@ -28,56 +25,60 @@ async function buyName() {
 }
 ```
 
-#### **2.** It checks if the entered name is **_expired or not_**
-
-by calling on **\*nameExists()** and **isExpiry()\***
+#### **2.** Check the availability of the name
 
 ```shell
 async function nameExists(name) {
   let exists = await contract.nameExists(name);
   if (exists == true) {
-    const isExpired = await cletPayContract.isExpired(name);
+    const isExpired = await contract.isExpired(name);
     if (isExpired == true) {
       exists = false;
+    } else {
+      alert("name not available");
     }
   }
   return exists;
 }
 ```
 
-#### 3. After the name has been checked and does not exist. It proceeds to call on **_buy()_** to first check the amount to pay for the name
+#### 3. If the name is available it proceeds to call **_buy()_**
 
 ```shell
 async function buy(name, years, partnerAddress)
 ```
 
-- ##### **PRICE CHECKING**
-  It gets current **eth price**
+- ##### ...
+
+  Get current **Eth price**
+
   ```shell
   const ethPrice = await contract.getEthPrice();
   ```
-  and next gets the **amount to pay in USD**
+
+  Get required **amount to pay in USD**
+
   ```shell
   let amtToPayIn_USD = await contract.getAmountToPay(name, years);
   ```
-  then lastly gets the **amount to pay in eth**
+
+  Calculate **amount to pay in Eth**
+
   ```shell
   let amtToPayIn_ETH =
   ethers.utils.formatEther(amtToPayIn_USD.toString()) /
   ethers.utils.formatEther(ethPrice.toString());
   ```
 
-#### 4. The **_pay()_** function is called to acquire the name.
+  Invoke crypto wallet client to confirm payment
 
-```shell
-const res = await contract.pay(name, years, partnerAddress, {
+  ```shell
+  const res = await contract.pay(name, years, partnerAddress, {
     value: BigNumber.from(
       ethers.utils.parseEther(amtToPayIn_ETH.toFixed(18).toString())
     ),
     gasLimit: 3000000,
   });
   await listenForTransactionMine(res, provider);
-}
-```
-
----
+  }
+  ```

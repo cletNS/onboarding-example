@@ -52,6 +52,8 @@ async function connect() {
 async function buyName() {
   const name = inputName.value;
   years = selectYear.options[selectYear.selectedIndex].text;
+
+  // Replace with valid partner address
   const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
 
   if ((await nameExists(name)) == true) {
