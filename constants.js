@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xb6D45DA9512002F24E599559bEF3ec8C5568E286";
+export const CONTRACT_ADDRESS = "0xeB918BdAD1B3205431A80dC1a0Ddf8F010C1A427";
 export const abi = [
   {
     inputs: [],
@@ -489,24 +489,6 @@ export const abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_years",
-        type: "uint256",
-      },
-    ],
-    name: "pay",
-    outputs: [],
-    stateMutability: "payable",
     type: "function",
   },
   {
