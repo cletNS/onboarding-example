@@ -1,13 +1,131 @@
+Eyram
+#4918
+
+Eyram — 04/11/2022
+okay
+balfazaar — 04/11/2022
+Logo updated, Discord in footer updated, Details Bulleted, "use the details..." not underlined
+Image
+should I push?
+Eyram — 04/11/2022
+hold on
+Eyram — 04/11/2022
+You can push now
+thank you
+balfazaar — 04/11/2022
+Alright anytime
+Eyram — 04/11/2022
+check if the dark mode affects the logo
+balfazaar — 04/11/2022
+Yeah it does so I turned off that button
+So it comes in light mode only
+Eyram — 04/11/2022
+great
+thanks
+balfazaar — 04/11/2022
+Anytime
+Eyram — 04/11/2022
+https://youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA
+YouTube
+Complete MongoDB Tutorial
+Image
+balfazaar — 04/11/2022
+Thanks
+Eyram — 04/11/2022
+You're welcome
+Eyram — Yesterday at 16:14
+Hello Alfred
+balfazaar — Yesterday at 18:18
+Hello Eyram
+Sorry for the late reply I was asleep
+Eyram — Yesterday at 18:26
+no worries Bro
+i've pushed some changes...just wanted to inform you so you update your your branch before you make any change
+balfazaar — Yesterday at 18:28
+alright i'll get on that right away
+Eyram — Yesterday at 18:28
+git checkout main
+
+git pull
+
+git checkout alfosei
+
+git merge main
+balfazaar — Yesterday at 18:30
+this is how i'll update mine?
+Eyram — Yesterday at 18:30
+yeah
+balfazaar — Yesterday at 18:30
+alright
+Eyram — Yesterday at 18:32
+if you get any error let me know
+balfazaar — Yesterday at 18:32
+alright
+Image
+No errors, do I push now?
+Eyram — Yesterday at 18:36
+yes
+balfazaar — Yesterday at 18:36
+alright
+done
+Eyram — Yesterday at 18:40
+and can you work on the onboarding as well
+
+the buyname() fn comes first and then you outline the steps as recommended in the previous meeting
+balfazaar — Yesterday at 18:43
+for point 3?
+Image
+This is the last update I did with Franz
+Eyram
+started a call that lasted a minute.
+— Yesterday at 18:44
+You missed a call from
+balfazaar
+that lasted a minute.
+— Yesterday at 18:45
+Eyram — Yesterday at 18:46
+let's text instead yh...network is messing up
+balfazaar — Yesterday at 18:46
+Alright
+Eyram — Yesterday at 18:47
+i mean number one will should no longer be numbered
+
+and 2 should now be number one and the rest follow in that order
+Eyram
+started a call that lasted a few seconds.
+— Yesterday at 18:47
+balfazaar — Yesterday at 18:48
+Oh okay
+updated
+
 # **Functions**
 
-- [_buyName()_](#1-after-user-clicks-buy-name-it-calls-on-buyname-it-then-checks-if-the-name-is-available-to-be-bought)
-- [_nameExists()_](#3-after-the-name-has-been-checked-and-does-not-exist-it-proceeds-to-call-on-buy-to-first-check-the-amount-to-pay-for-the-name)
+- _buyName()_
+  Expand
+  READMEonboarding.md
+  2 KB
+  Eyram — Yesterday at 18:54
+  change the 3 to 2
+  balfazaar — Yesterday at 18:54
+  yeah I've changed it
+  Eyram — Yesterday at 18:55
+  yeah it's okay now
+  thanks
+  balfazaar — Yesterday at 19:04
+  anytime
+
+
+
+# **Functions**
+
+- _buyName()_
+- _nameExists()_
 
 ### **Procedure**
 
 ---
 
-#### **1.** After user clicks **'buy name'** it calls on **_buyName()_**. It then [checks](#name-checking) if the name is available to be bought
+After user clicks **'buy name'** it calls on **_buyName()_**. It then [checks](#name-checking) if the name is available to be bought
 
 ```shell
 async function buyName() {
@@ -25,7 +143,7 @@ async function buyName() {
 }
 ```
 
-#### **2.** Check the availability of the name
+#### **1.** Check the availability of the name
 
 ```shell
 async function nameExists(name) {
@@ -42,7 +160,7 @@ async function nameExists(name) {
 }
 ```
 
-#### 3. If the name is available it proceeds to call **_buy()_**
+#### **2.** If the name is available it proceeds to call **_buy()_**
 
 ```shell
 async function buy(name, years, partnerAddress)

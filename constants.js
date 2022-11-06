@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x67D8cC63b1a9E733ae71715e4a1cEa4D5ef3f381";
+export const CONTRACT_ADDRESS = "0xb6D45DA9512002F24E599559bEF3ec8C5568E286";
 export const abi = [
   {
     inputs: [],
@@ -245,6 +245,19 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getAllListedNames",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "string",
@@ -271,6 +284,19 @@ export const abi = [
   {
     inputs: [],
     name: "getEthPrice",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getListedNamesCount",
     outputs: [
       {
         internalType: "uint256",
@@ -314,6 +340,44 @@ export const abi = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    name: "listedName_ID",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "listedNames",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -427,24 +491,24 @@ export const abi = [
     stateMutability: "view",
     type: "function",
   },
-  // {
-  //   inputs: [
-  //     {
-  //       internalType: "string",
-  //       name: "_name",
-  //       type: "string",
-  //     },
-  //     {
-  //       internalType: "uint256",
-  //       name: "_years",
-  //       type: "uint256",
-  //     },
-  //   ],
-  //   name: "pay",
-  //   outputs: [],
-  //   stateMutability: "payable",
-  //   type: "function",
-  // },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_years",
+        type: "uint256",
+      },
+    ],
+    name: "pay",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
   {
     inputs: [
       {
