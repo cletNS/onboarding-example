@@ -1,31 +1,10 @@
-# **Functions**
-
-- _buyName()_
-- _nameExists()_
+# **Onboarding with ethers**
 
 ### **Procedure**
 
 ---
 
-After user clicks **'buy name'** it calls on **_buyName()_**. It then [checks](#name-checking) if the name is available to be bought
-
-```shell
-async function buyName() {
-  const name = inputName.value;
-  years = selectYear.options[selectYear.selectedIndex].text;
-
-  //Replace with your valid partner address
-  const partnerAddress = "0x220CBAa432d0dC976517cbC0313CF54477dAa66C";
-
-  if ((await nameExists(name)) == true) {
-    console.log(`${name} not available`);
-  } else {
-    buy(name, years, partnerAddress);
-  }
-}
-```
-
-#### **1.** Check the availability of the name
+#### **1.** Check the **availability of the name**
 
 ```shell
 async function nameExists(name) {
@@ -42,43 +21,35 @@ async function nameExists(name) {
 }
 ```
 
-#### **2.** If the name is available it proceeds to call **_buy()_**
+#### **2.** Get current **Eth price**
 
 ```shell
-async function buy(name, years, partnerAddress)
+const ethPrice = await contract.getEthPrice();
 ```
 
-- ##### ...
+#### **3.** Get required **amount to pay in USD**
 
-  Get current **Eth price**
+```shell
+let amtToPayIn_USD = await contract.getAmountToPay(name, years);
+```
 
-  ```shell
-  const ethPrice = await contract.getEthPrice();
-  ```
+#### **4.** Calculate **amount to pay in Eth**
 
-  Get required **amount to pay in USD**
+```shell
+let amtToPayIn_ETH =
+ethers.utils.formatEther(amtToPayIn_USD.toString()) /
+ethers.utils.formatEther(ethPrice.toString());
+```
 
-  ```shell
-  let amtToPayIn_USD = await contract.getAmountToPay(name, years);
-  ```
+#### **5.** Invoke crypto wallet client to **confirm payment by user**
 
-  Calculate **amount to pay in Eth**
-
-  ```shell
-  let amtToPayIn_ETH =
-  ethers.utils.formatEther(amtToPayIn_USD.toString()) /
-  ethers.utils.formatEther(ethPrice.toString());
-  ```
-
-  Invoke crypto wallet client to confirm payment
-
-  ```shell
-  const res = await contract.pay(name, years, partnerAddress, {
-    value: BigNumber.from(
-      ethers.utils.parseEther(amtToPayIn_ETH.toFixed(18).toString())
-    ),
-    gasLimit: 3000000,
-  });
-  await listenForTransactionMine(res, provider);
-  }
-  ```
+```shell
+const res = await contract.pay(name, years, partnerAddress, {
+  value: BigNumber.from(
+    ethers.utils.parseEther(amtToPayIn_ETH.toFixed(18).toString())
+  ),
+  gasLimit: 3000000,
+});
+await listenForTransactionMine(res, provider);
+}
+```
